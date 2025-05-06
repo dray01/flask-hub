@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-hub
+  template:
+    metadata:
+      labels:
+        app: flask-hub
+    spec:
+      containers:
+      - name: flask-hub
+        image: flask-hub:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-hub-service
+spec:
+  selector:
+    app: flask-hub
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
